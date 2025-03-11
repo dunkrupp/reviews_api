@@ -10,7 +10,7 @@ RSpec.describe Reviews::Collect do
 
     context 'when the URL is valid and reviews are found' do
       it 'returns a Success monad with reviews' do
-        mock_faraday_response = double(Faraday::Response, success?: true, body: '<html><body><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">John Doe</div><div data-aqa-id="star-rating"><div data-aqa-id="star"></div><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div></body></html>')
+        mock_faraday_response = double(Faraday::Response, success?: true, body: '<html><body><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">John Doe</div><div data-aqa-id="star-rating-filled"><div data-aqa-id="star"></div><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div></body></html>')
         mock_faraday_connection = double(Faraday::Response)
         allow(Faraday).to receive(:new).and_return(mock_faraday_connection)
         allow(mock_faraday_connection).to receive(:get).with(target_url).and_return(mock_faraday_response)
@@ -65,7 +65,7 @@ RSpec.describe Reviews::Collect do
     end
 
     context 'when parsing reviews' do
-      let(:html) { '<html><body><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">John Doe</div><div data-aqa-id="star-rating"><div data-aqa-id="star"></div><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div></body></html>' }
+      let(:html) { '<html><body><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">John Doe</div><div data-aqa-id="star-rating-filled"><div data-aqa-id="star"></div><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div></body></html>' }
       let(:doc) { Nokogiri::HTML(html) }
       let(:container) { doc.at_css('[data-aqa-id="feedback-container"]') }
 
@@ -77,7 +77,7 @@ RSpec.describe Reviews::Collect do
       end
 
       it 'correctly parses multiple reviews' do
-        html_multiple = '<html><body><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">John Doe</div><div data-aqa-id="star-rating"><div data-aqa-id="star"></div><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">Jane Doe</div><div data-aqa-id="star-rating"><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div></body></html>'
+        html_multiple = '<html><body><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">John Doe</div><div data-aqa-id="star-rating-filled"><div data-aqa-id="star"></div><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div><div data-aqa-id="feedback-container"><div data-aqa-id="customer-name">Jane Doe</div><div data-aqa-id="star-rating-filled"><div data-aqa-id="star"></div><div data-aqa-id="star"></div></div></div></body></html>'
         reviews = described_class.new.send(:parse_reviews, html_multiple)
         expect(reviews.length).to eq(2)
         expect(reviews.first).to be_a(Review)

@@ -40,7 +40,7 @@ module Reviews
       customer_location_element = doc.at_css('[data-aqa-id="customer-location"]')
       customer_purchased_date_element = doc.at_css('[data-aqa-id="customer-purchased-date"]')
       customer_comment_likes_element = doc.at_css('[data-aqa-id="feedback-like-button"]')
-      star_rating_container = doc.at_css('[data-aqa-id="star-rating"]')
+      star_rating_container = doc.at_css('[data-aqa-id="star-rating-filled"]')
 
       if star_rating_container
         stars = star_rating_container.css('[data-aqa-id="star"]')
