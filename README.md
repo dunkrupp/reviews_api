@@ -22,6 +22,10 @@ A few example target Feefo URLs:
 ```bash
 # access a terminal
 # navigate to the application root
+# ensure you have bundle installed
+
+# install dependencies
+bundle install
 
 # run the service
 rails s 
